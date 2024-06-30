@@ -1,8 +1,12 @@
 ---
-import Starfield from "../components/Starfield.astro";
+import Features from "@/components/Features.astro";
+import Header from "@/components/Header.astro";
+import Splash from "@/components/Splash.astro";
+import "@/styles/globals.css";
+import { Button } from "@/components/ui/button";
 ---
 
-<html lang="en">
+<html lang="en" class="h-full motion-safe:scroll-smooth" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -10,7 +14,16 @@ import Starfield from "../components/Starfield.astro";
     <meta name="generator" content={Astro.generator} />
     <title>Astro</title>
   </head>
-  <body>
-    <Starfield />
+  <body
+    class="h-full overflow-x-hidden text-base selection:bg-secondary selection:text-white"
+  >
+    <Header />
+    <Splash />
+    <div class="space-y-24 px-8 py-32">
+      <Button>Hello World</Button>
+      <Features />
+      <Features />
+      <Features />
+    </div>
   </body>
 </html>
