@@ -1,0 +1,46 @@
+---
+import { Image } from "astro:assets";
+import IconLink from "./IconLink";
+import Logo from "./Logo";
+import { BookIcon, FeedIcon, GitHubIcon } from "@/icons/Icons";
+import meImage from "../assets/me-laser.png";
+
+const widths = [450, 800];
+const sizes = "(min-width: 640px) 42vw, 67vw";
+---
+
+<div>
+  <div
+    class="relative w-2/3 max-w-3xl self-start sm:w-10/12 sm:self-auto sm:justify-self-start"
+  >
+    <Image
+      class="h-full w-full object-cover"
+      src={meImage}
+      widths={widths}
+      sizes={sizes}
+      loading="eager"
+      alt="A floating astronaut in a space suit"
+    />
+  </div>
+</div>
+<h1 class="font-display mt-14 text-4xl/tight font-light text-white">
+  Hello,{" "}<br />
+  <span class="text-sky-300">I'm Laurent Della-Negra</span>
+</h1>
+<p class="mt-4 text-sm/6 text-gray-300">
+  Commit is a lightweight Git client you can open from anywhere any time you’re
+  ready to commit your work with a single keyboard shortcut. It’s fast,
+  beautiful, and completely unnecessary.
+</p>
+{/* <SignUpForm /> */}
+<div
+  class="mt-8 flex flex-wrap justify-center gap-x-1 gap-y-3 sm:gap-x-2 lg:justify-start"
+>
+  <IconLink href="#" icon={BookIcon} className="flex-none">
+    Documentation
+  </IconLink>
+  <IconLink href="#" icon={GitHubIcon} className="flex-none"> GitHub </IconLink>
+  <IconLink href="/feed.xml" icon={FeedIcon} className="flex-none">
+    RSS
+  </IconLink>
+</div>
