@@ -2,26 +2,35 @@
 title: 'My first MDX post'
 author: 'Houston'
 ---
-import { SparkleIcon } from '@/components/SparkleIcon'
+import SparkleIcon from '@/components/SparkleIcon'
+import PeopleIcon from '@/components/PeopleIcon'
+import StackIcon from '@/components/StackIcon'
+import Time from '@/components/Time'
 
-![](@/assets/commit-suggestions.png)
+<Time />
 
-## Commit message suggestions
+![](@/assets/wide-pictet.webp)
 
-In the latest release, I've added support for commit message and description suggestions via an integration with OpenAI. Commit looks at all of your changes, and feeds that into the machine with a bit of prompt-tuning to get back a commit message that does a surprisingly good job at describing the intent of your changes.
+## Front-end dev at Wide - Pictet
 
-It's also been a pretty helpful way to remind myself what the hell I was working on at the end of the day yesterday when I get back to my computer and realize I didn't commit any of my work.
+I manage a React-based intranet for Pictet, enabling users to create content, engage in discussions, and access financial data. 
+I developed a design system for the platform and created a ChatGPT clone using AWS Bedrock. 
+Additionally, I built several React pages for [am.pictet.com](https://am.pictet.com/ch/en/institutions/funds), integrated into the AEM CMS.
 
-### <SparkleIcon className="inline w-4 h-4 mr-3"/> Improvements
+### <PeopleIcon className="inline w-4 h-4 mr-3"/> Team
 
-- Added commit message and description suggestions powered by OpenAI
-- Fixed race condition that could sometimes leave you in a broken rebase state
-- Improved active project detection to try and ignore file changes triggered by the system instead of the user
-- Fixed bug that sometimes reported the wrong number of changed files
+- 5 front (2 spanishs)
+- 3 backs
+- 1 designer
+
+### <StackIcon className="inline w-4 h-4 mr-3"/> Stack
+
+React, Tanstack Query, Tanstack Router, MUI, ViteJs, docker, Storybook, react testing library, Ckeditor, GraphQL, highcharts, redux.
 
 ---
 
-![](@/assets/configuration-files.png)
+<Time date={new Date('2021-02')}/>
+![](@/assets/bp.webp)
 
 ## Project configuration files
 
