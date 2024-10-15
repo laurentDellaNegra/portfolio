@@ -11,5 +11,5 @@ import react from '@astrojs/react';
 export default defineConfig({
   base: 'portfolio',
   integrations: [tailwind(), mdx(), react()],
-  site: 'https://laurentDellaNegra.github.io',
+  site: 'https://ldellanegra.com',
 });
