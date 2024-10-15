@@ -9,5 +9,7 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), mdx(), react()]
+  base: 'portfolio',
+  integrations: [tailwind(), mdx(), react()],
+  site: 'https://laurentDellaNegra.github.io',
 });
