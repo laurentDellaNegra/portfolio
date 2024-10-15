@@ -1,14 +1,12 @@
-export default function Time({ date }: { date?: Date }) {
-  const formatedDate = date
-    ? new Intl.DateTimeFormat("en-UK", {
-        dateStyle: "medium",
-      }).format(date)
-    : "Now";
+export default function Time({ date = new Date() }: { date: Date }) {
+  const formatedDate = new Intl.DateTimeFormat("en-UK", {
+    dateStyle: "medium",
+  }).format(date);
 
   const dateTime = (date ?? new Date()).toLocaleString();
 
   return (
-    <header className="relative z-50 -ml-[45px] mb-10 flex w-36 flex-row items-center justify-end gap-3 xl:-ml-[196px] xl:mb-0">
+    <header className="relative z-50 -ml-[32px] mb-10 flex w-36 flex-row items-center gap-3 xl:-ml-[208px] xl:mb-0 xl:justify-end">
       <time
         dateTime={dateTime}
         className="hidden font-mono xl:pointer-events-auto xl:block xl:text-xs/4 xl:font-medium xl:text-white/50"
