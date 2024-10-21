@@ -1,0 +1,29 @@
+---
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
+---
+
+<div
+  class="mx-auto flex w-fit justify-center gap-5 rounded-lg border border-gray-700 p-1"
+>
+  <a
+    href="/"
+    class={`px-3 py-2 rounded-md font-semibold w-40 text-center ${
+      currentPath === ""
+        ? "text-white bg-gray-800 transition-opacity"
+        : "text-gray-500"
+    }`}
+  >
+    Work
+  </a>
+  <a
+    href="/perso"
+    class={`px-3 py-2 rounded-md font-semibold w-40 text-center  ${
+      currentPath === "perso"
+        ? "text-white bg-gray-800 transition-opacity"
+        : "text-gray-500"
+    }`}
+  >
+    Personal projects
+  </a>
+</div>

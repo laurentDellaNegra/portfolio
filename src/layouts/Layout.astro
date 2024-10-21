@@ -1,0 +1,42 @@
+---
+import Prose from "@/components/Prose.astro";
+import FixedSidebar from "@/components/FixedSidebar.astro";
+import Timeline from "@/components/Timeline";
+import { ViewTransitions } from "astro:transitions";
+import ToggleView from "@/components/ToggleView.astro";
+---
+
+<html lang="en" class="h-full antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+    <ViewTransitions />
+  </head>
+  <body class="flex min-h-full flex-col bg-gray-950 text-white">
+    <FixedSidebar />
+    <div class="relative flex-auto">
+      <Timeline />
+      <main class="space-y-20 py-20 sm:space-y-32 sm:py-32">
+        <article class="scroll-mt-16">
+          <div class="mx-auto max-w-7xl px-6 lg:flex lg:px-8">
+            <div class="lg:ml-96 lg:flex lg:w-full lg:justify-end lg:pl-32">
+              <div
+                class="typography mx-auto max-w-lg lg:mx-0 lg:w-0 lg:max-w-xl lg:flex-auto"
+              >
+                <div class="mb-11">
+                  <ToggleView />
+                </div>
+                <Prose>
+                  <slot />
+                </Prose>
+              </div>
+            </div>
+          </div>
+        </article>
+      </main>
+    </div>
+  </body>
+</html>
