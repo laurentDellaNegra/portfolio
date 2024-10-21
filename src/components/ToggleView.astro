@@ -1,6 +1,7 @@
 ---
 const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.slice(1); // remove the first "/"
+const isPerso = currentPath.includes("perso");
 ---
 
 <div
@@ -9,9 +10,7 @@ const currentPath = pathname.slice(1); // remove the first "/"
   <a
     href="/#article"
     class={`px-3 py-2 rounded-md font-semibold sm:w-40 text-center ${
-      currentPath === ""
-        ? "text-white bg-gray-800 transition-opacity"
-        : "text-gray-500"
+      !isPerso ? "text-white bg-gray-800 transition-opacity" : "text-gray-500"
     }`}
   >
     Work
@@ -19,9 +18,7 @@ const currentPath = pathname.slice(1); // remove the first "/"
   <a
     href="/perso#article"
     class={`px-3 py-2 rounded-md font-semibold sm:w-40 text-center  ${
-      currentPath === "perso"
-        ? "text-white bg-gray-800 transition-opacity"
-        : "text-gray-500"
+      isPerso ? "text-white bg-gray-800 transition-opacity" : "text-gray-500"
     }`}
   >
     Personal projects
