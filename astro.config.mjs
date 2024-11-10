@@ -11,4 +11,5 @@ import react from '@astrojs/react';
 export default defineConfig({
   integrations: [tailwind(), mdx(), react()],
   site: 'https://ldellanegra.com',
+  trailingSlash: "never"
 });
