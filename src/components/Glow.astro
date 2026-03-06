@@ -13,14 +13,16 @@ const id = crypto.randomUUID();
   >
     <defs>
       <radialGradient id={`${id}-desktop`} cx="100%">
-        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.3)"></stop>
-        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.09)"></stop>
-        <stop offset="100%" stop-color="rgba(10, 14, 23, 0)"></stop>
+        <stop offset="0%" stop-color="rgba(0, 240, 255, 0.25)"></stop>
+        <stop offset="35%" stop-color="rgba(176, 0, 255, 0.1)"></stop>
+        <stop offset="65%" stop-color="rgba(255, 0, 229, 0.05)"></stop>
+        <stop offset="100%" stop-color="rgba(10, 10, 20, 0)"></stop>
       </radialGradient>
       <radialGradient id={`${id}-mobile`} cy="100%">
-        <stop offset="0%" stop-color="rgba(56, 189, 248, 0.3)"></stop>
-        <stop offset="53.95%" stop-color="rgba(0, 71, 255, 0.09)"></stop>
-        <stop offset="100%" stop-color="rgba(10, 14, 23, 0)"></stop>
+        <stop offset="0%" stop-color="rgba(0, 240, 255, 0.25)"></stop>
+        <stop offset="35%" stop-color="rgba(176, 0, 255, 0.1)"></stop>
+        <stop offset="65%" stop-color="rgba(255, 0, 229, 0.05)"></stop>
+        <stop offset="100%" stop-color="rgba(10, 10, 20, 0)"></stop>
       </radialGradient>
     </defs>
     <rect
@@ -35,7 +37,7 @@ const id = crypto.randomUUID();
       class="lg:hidden"></rect>
   </svg>
   <div
-    class="absolute inset-x-0 bottom-0 right-0 h-px bg-white mix-blend-overlay lg:left-auto lg:top-0 lg:h-auto lg:w-px"
+    class="absolute inset-x-0 bottom-0 right-0 h-px bg-neon-cyan/30 shadow-neon-cyan lg:left-auto lg:top-0 lg:h-auto lg:w-px"
   >
   </div>
 </div>

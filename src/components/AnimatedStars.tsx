@@ -1,17 +1,17 @@
 import { useRef, useEffect } from "react";
 
-const STAR_COUNT = 3000;
-const NEBULA_COUNT = 120;
+const STAR_COUNT = 1500;
+const NEBULA_COUNT = 40;
 const SPEED = 0.1;
 
 const STAR_COLORS = [
-  [180, 220, 255], // cool white-blue
-  [140, 180, 255], // soft blue
-  [100, 140, 255], // medium blue
-  [160, 100, 255], // purple
+  [0, 240, 255],   // neon cyan
+  [0, 200, 255],   // electric blue
+  [176, 0, 255],   // neon purple
+  [255, 0, 229],   // neon magenta
+  [255, 45, 123],  // neon pink
+  [100, 160, 255], // soft blue
   [200, 140, 255], // light purple
-  [255, 200, 220], // warm pink-white
-  [80, 200, 255], // cyan
   [255, 255, 255], // pure white
 ];
 
@@ -21,9 +21,12 @@ class WarpStar {
   z = 0;
   pz = 0;
   color: number[];
+  headColor: string;
 
   constructor() {
     this.color = STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)];
+    const [r, g, b] = this.color;
+    this.headColor = `rgb(${Math.min(255, r + 80)},${Math.min(255, g + 80)},${Math.min(255, b + 80)})`;
     this.reset(true);
   }
 
@@ -70,17 +73,17 @@ class NebulaParticle {
     this.opacity = initial ? Math.random() : 0;
     this.fadingIn = true;
     this.fadeSpeed = 0.002 + Math.random() * 0.004;
-    this.baseAlpha = 0.025;
+    this.baseAlpha = 0.06;
 
     const r = Math.random();
     this.hue =
-      r < 0.35
-        ? 200 + Math.random() * 40 // blue
-        : r < 0.65
-          ? 240 + Math.random() * 40 // indigo-purple
-          : r < 0.85
-            ? 280 + Math.random() * 30 // magenta
-            : 170 + Math.random() * 30; // teal
+      r < 0.3
+        ? 180 + Math.random() * 20
+        : r < 0.55
+          ? 270 + Math.random() * 30
+          : r < 0.8
+            ? 300 + Math.random() * 30
+            : 200 + Math.random() * 40;
     this.saturation = 60 + Math.random() * 30;
     this.lightness = 30 + Math.random() * 20;
   }
@@ -124,38 +127,12 @@ class NebulaParticle {
       }
     }
   }
-
-  draw(ctx: CanvasRenderingContext2D) {
-    if (this.opacity <= 0) return;
-    const alpha = this.baseAlpha * this.opacity;
-    const color = `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${alpha})`;
-    const grad = ctx.createRadialGradient(
-      this.x,
-      this.y,
-      0,
-      this.x,
-      this.y,
-      this.radius,
-    );
-    grad.addColorStop(0, color);
-    grad.addColorStop(1, "transparent");
-    ctx.fillStyle = grad;
-    ctx.fillRect(
-      this.x - this.radius,
-      this.y - this.radius,
-      this.radius * 2,
-      this.radius * 2,
-    );
-  }
 }
 
 export default function AnimatedStars() {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const starsRef = useRef<WarpStar[]>([]);
-  const nebulaRef = useRef<NebulaParticle[]>([]);
   const rafRef = useRef<number>(0);
-  const timeRef = useRef<number>(0);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -165,8 +142,14 @@ export default function AnimatedStars() {
     const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    // Initialize stars
-    starsRef.current = Array.from({ length: STAR_COUNT }, () => new WarpStar());
+    const stars = Array.from({ length: STAR_COUNT }, () => new WarpStar());
+    let nebulas: NebulaParticle[] = [];
+
+    // Offscreen canvases for expensive layers
+    let nebulaCanvas: HTMLCanvasElement | null = null;
+    let nebulaCtx: CanvasRenderingContext2D | null = null;
+    let vignetteCanvas: HTMLCanvasElement | null = null;
+    let nebulaFrameCounter = 0;
 
     let width = 0;
     let height = 0;
@@ -180,20 +163,38 @@ export default function AnimatedStars() {
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Reinit nebula on resize
-      nebulaRef.current = Array.from(
+      nebulas = Array.from(
         { length: NEBULA_COUNT },
         () => new NebulaParticle(width, height, true),
       );
+
+      // Offscreen nebula layer
+      nebulaCanvas = document.createElement("canvas");
+      nebulaCanvas.width = width * dpr;
+      nebulaCanvas.height = height * dpr;
+      nebulaCtx = nebulaCanvas.getContext("2d")!;
+      nebulaCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      nebulaFrameCounter = 0;
+
+      // Pre-render vignette
+      vignetteCanvas = document.createElement("canvas");
+      vignetteCanvas.width = width * dpr;
+      vignetteCanvas.height = height * dpr;
+      const vCtx = vignetteCanvas.getContext("2d")!;
+      vCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const vignetteSize = Math.max(width, height) * 0.8;
+      const cx = width / 2;
+      const cy = height / 2;
+      const vignette = vCtx.createRadialGradient(cx, cy, vignetteSize * 0.3, cx, cy, vignetteSize);
+      vignette.addColorStop(0, "transparent");
+      vignette.addColorStop(1, "rgba(0, 0, 5, 0.4)");
+      vCtx.fillStyle = vignette;
+      vCtx.fillRect(0, 0, width, height);
     };
 
     const frame = (timestamp: number) => {
-      timeRef.current = timestamp;
-
-      const speed = SPEED;
-
       const cx = width / 2;
       const cy = height / 2;
 
@@ -201,23 +202,35 @@ export default function AnimatedStars() {
       ctx.fillStyle = "rgba(3, 4, 12, 0.12)";
       ctx.fillRect(0, 0, width, height);
 
-      // Draw nebula clouds
-      for (const nebula of nebulaRef.current) {
-        nebula.update(timestamp);
-        nebula.draw(ctx);
+      // Redraw nebula layer every 6 frames (~10fps) — they move slowly anyway
+      if (nebulaCtx && nebulaCanvas) {
+        nebulaFrameCounter++;
+        if (nebulaFrameCounter >= 6) {
+          nebulaFrameCounter = 0;
+          nebulaCtx.clearRect(0, 0, width, height);
+          for (let i = 0; i < nebulas.length; i++) {
+            const n = nebulas[i];
+            n.update(timestamp);
+            if (n.opacity <= 0) continue;
+            const alpha = n.baseAlpha * n.opacity;
+            const color = `hsla(${n.hue},${n.saturation}%,${n.lightness}%,${alpha})`;
+            const grad = nebulaCtx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.radius);
+            grad.addColorStop(0, color);
+            grad.addColorStop(1, "transparent");
+            nebulaCtx.fillStyle = grad;
+            nebulaCtx.fillRect(n.x - n.radius, n.y - n.radius, n.radius * 2, n.radius * 2);
+          }
+        }
+        ctx.drawImage(nebulaCanvas, 0, 0, width, height);
       }
 
-      // Draw warp stars
-      const stars = starsRef.current;
+      // Draw warp stars — batch by color to reduce state changes
       for (let i = 0; i < stars.length; i++) {
         const star = stars[i];
-        star.update(speed);
+        star.update(SPEED);
 
-        // Project to screen
         const sx = (star.x / star.z) * width * 0.5 + cx;
         const sy = (star.y / star.z) * height * 0.5 + cy;
-        const psx = (star.x / star.pz) * width * 0.5 + cx;
-        const psy = (star.y / star.pz) * height * 0.5 + cy;
 
         // Skip if off-screen
         if (sx < -50 || sx > width + 50 || sy < -50 || sy > height + 50) {
@@ -225,72 +238,47 @@ export default function AnimatedStars() {
           continue;
         }
 
-        // Size & brightness based on depth
+        const psx = (star.x / star.pz) * width * 0.5 + cx;
+        const psy = (star.y / star.pz) * height * 0.5 + cy;
+
         const size = (1 - star.z) * 3;
         const brightness = Math.min(1, (1 - star.z) * 1.5);
-
-        // Trail length increases with speed
         const [r, g, b] = star.color;
-        const trailLen = Math.hypot(sx - psx, sy - psy);
 
-        if (trailLen > 0.5) {
-          // Draw the star trail
-          const gradient = ctx.createLinearGradient(psx, psy, sx, sy);
-          gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
-          gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${brightness})`);
+        // Draw trail as simple line (no gradient — major perf win)
+        ctx.globalAlpha = brightness;
+        ctx.strokeStyle = `rgb(${r},${g},${b})`;
+        ctx.lineWidth = Math.max(0.5, size * 0.6);
+        ctx.beginPath();
+        ctx.moveTo(psx, psy);
+        ctx.lineTo(sx, sy);
+        ctx.stroke();
 
-          ctx.strokeStyle = gradient;
-          ctx.lineWidth = Math.max(0.5, size * 0.8);
-          ctx.beginPath();
-          ctx.moveTo(psx, psy);
-          ctx.lineTo(sx, sy);
-          ctx.stroke();
-        }
-
-        // Draw bright star head
+        // Draw star head
         if (size > 0.8) {
+          ctx.fillStyle = star.headColor;
           ctx.beginPath();
           ctx.arc(sx, sy, size * 0.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${Math.min(255, r + 80)}, ${Math.min(255, g + 80)}, ${Math.min(255, b + 80)}, ${brightness})`;
           ctx.fill();
-
-          // Glow for bright stars
-          if (brightness > 0.6 && size > 1.5) {
-            ctx.beginPath();
-            ctx.arc(sx, sy, size * 2, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${brightness * 0.1})`;
-            ctx.fill();
-          }
         }
       }
+      ctx.globalAlpha = 1;
 
-      // Subtle vignette
-      const vignetteSize = Math.max(width, height) * 0.8;
-      const vignette = ctx.createRadialGradient(
-        cx,
-        cy,
-        vignetteSize * 0.3,
-        cx,
-        cy,
-        vignetteSize,
-      );
-      vignette.addColorStop(0, "transparent");
-      vignette.addColorStop(1, "rgba(0, 0, 5, 0.4)");
-      ctx.fillStyle = vignette;
-      ctx.fillRect(0, 0, width, height);
+      // Draw pre-rendered vignette
+      if (vignetteCanvas) {
+        ctx.drawImage(vignetteCanvas, 0, 0, width, height);
+      }
 
       rafRef.current = requestAnimationFrame(frame);
     };
 
     resize();
-    // First frame: fill with dark background
     ctx.fillStyle = "rgb(3, 4, 12)";
     ctx.fillRect(0, 0, width, height);
 
     rafRef.current = requestAnimationFrame(frame);
 
     const resizeObserver = new ResizeObserver(() => {
-      ctx.resetTransform();
       resize();
     });
     resizeObserver.observe(container);

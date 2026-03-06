@@ -12,7 +12,7 @@ export default function Timeline() {
                     <pattern id={id} width="6" height="8" patternUnits="userSpaceOnUse">
                         <path
                             d="M0 0H6M0 8H6"
-                            className="stroke-sky-900/10 xl:stroke-white/10 dark:stroke-white/10"
+                            className="stroke-neon-cyan/10 xl:stroke-neon-cyan/15"
                             fill="none"
                         />
                     </pattern>

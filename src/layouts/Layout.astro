@@ -19,6 +19,125 @@ import ToggleView from "@/components/ToggleView.astro";
       content="Discover my portfolio showcasing professional and personal work. Browse through my projects and achievements in web development, design, and creative endeavors."
     />
     <ViewTransitions />
+    <style is:global>
+      /* ═══ Neon text utilities ═══ */
+      .neon-text-cyan {
+        color: #00f0ff;
+        text-shadow:
+          0 0 4px rgba(0, 240, 255, 0.6),
+          0 0 12px rgba(0, 240, 255, 0.4),
+          0 0 30px rgba(0, 240, 255, 0.2),
+          0 0 60px rgba(0, 240, 255, 0.08);
+      }
+      .neon-text-magenta {
+        color: #ff00e5;
+        text-shadow:
+          0 0 4px rgba(255, 0, 229, 0.6),
+          0 0 12px rgba(255, 0, 229, 0.4),
+          0 0 30px rgba(255, 0, 229, 0.2),
+          0 0 60px rgba(255, 0, 229, 0.08);
+      }
+      .neon-text-purple {
+        color: #b000ff;
+        text-shadow:
+          0 0 4px rgba(176, 0, 255, 0.6),
+          0 0 12px rgba(176, 0, 255, 0.4),
+          0 0 30px rgba(176, 0, 255, 0.2),
+          0 0 60px rgba(176, 0, 255, 0.08);
+      }
+
+      ::selection {
+        background: rgba(0, 240, 255, 0.3);
+        color: #fff;
+      }
+
+      /* ═══ Prose content styling ═══ */
+      .prose h2 {
+        color: #fff;
+        text-shadow: 0 0 8px rgba(255, 255, 255, 0.15);
+        border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+        padding-bottom: 0.5rem;
+      }
+
+      .prose h3 {
+        color: #00f0ff;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        text-shadow:
+          0 0 4px rgba(0, 240, 255, 0.5),
+          0 0 15px rgba(0, 240, 255, 0.25);
+      }
+
+      .prose a {
+        color: #00f0ff;
+        text-decoration: none;
+        text-shadow: 0 0 4px rgba(0, 240, 255, 0.3);
+        transition: text-shadow 0.3s ease, color 0.3s ease;
+      }
+      .prose a:hover {
+        text-shadow:
+          0 0 4px rgba(0, 240, 255, 0.6),
+          0 0 12px rgba(0, 240, 255, 0.4),
+          0 0 30px rgba(0, 240, 255, 0.15);
+      }
+
+      .prose strong {
+        color: #fff;
+      }
+
+      /* ═══ Images — neon border glow ═══ */
+      .prose img {
+        border: 1px solid rgba(0, 240, 255, 0.12);
+        box-shadow: 0 0 20px rgba(0, 240, 255, 0.06), 0 4px 30px rgba(0, 0, 0, 0.4);
+        transition: border-color 0.4s ease, box-shadow 0.4s ease;
+      }
+      .prose img:hover {
+        border-color: rgba(0, 240, 255, 0.3);
+        box-shadow: 0 0 25px rgba(0, 240, 255, 0.12), 0 4px 30px rgba(0, 0, 0, 0.4);
+      }
+
+      /* ═══ Lists — neon bullets ═══ */
+      .prose ul > li::marker {
+        color: rgba(0, 240, 255, 0.6);
+      }
+      .prose ol > li::marker {
+        color: rgba(0, 240, 255, 0.6);
+      }
+
+      /* ═══ Horizontal rules — neon divider ═══ */
+      .prose hr {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(176, 0, 255, 0.3), rgba(0, 240, 255, 0.3), transparent);
+        margin: 2.5rem 0;
+        visibility: visible !important;
+      }
+
+      /* ═══ Inline code ═══ */
+      .prose code:not(pre code) {
+        color: #00f0ff;
+        background: rgba(0, 240, 255, 0.08);
+        border: 1px solid rgba(0, 240, 255, 0.12);
+        border-radius: 4px;
+        padding: 0.15em 0.35em;
+        font-size: 0.85em;
+      }
+
+      /* ═══ Blockquotes ═══ */
+      .prose blockquote {
+        border-left-color: rgba(176, 0, 255, 0.5);
+        background: rgba(176, 0, 255, 0.04);
+        border-radius: 0 8px 8px 0;
+        padding: 0.5rem 1rem;
+      }
+
+      /* ═══ Override sky-400 in MDX content ═══ */
+      .typography .text-sky-400 {
+        color: #00f0ff !important;
+        text-shadow: 0 0 7px rgba(0, 240, 255, 0.4);
+      }
+    </style>
   </head>
   <body class="flex min-h-full flex-col bg-gray-950 text-white">
     <FixedSidebar transition:persist />
